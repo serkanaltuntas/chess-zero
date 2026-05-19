@@ -1,0 +1,46 @@
+[project]
+name = "chess-zero"
+version = "0.0.1"
+description = "AlphaZero-style chess from scratch — own board, own ML pipeline."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Serkan Altuntaş" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "hypothesis>=6.100",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "python-chess>=1.999",
+]
+
+[project.scripts]
+chess-zero = "chess_zero.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["chess_zero"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "PL"]
+ignore = ["PLR0913"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["chess_zero"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --strict-markers"

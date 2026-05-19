@@ -1,0 +1,35 @@
+# Personal superpowers workflow artifacts (specs, plans) — not part of public repo
+docs/superpowers/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+.python-version-local
+dist/
+build/
+
+# uv
+.uv-cache/
+
+# Pytest / mypy / ruff
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Project runtime data
+checkpoints/
+data/
+runs/
+*.partial
+
+# Editors
+.vscode/
+.idea/
+*.swp
+.DS_Store
