@@ -16,7 +16,7 @@ step are notes (measurements, decisions) — kept for future-me.
 > python-chess lives in tests/oracles/ only; never imported by chess_zero/
 > 6 standard positions × depth 1-3 + starting d4 = 19 cases, all match.
 > Aliasing bug in `_king_moves` (queenside castle missed in Kiwipete) caught and fixed.
-- [ ] Interactive terminal CLI: play vs human, play vs random
+- [x] Interactive terminal CLI: play vs human, play vs random
 
 - [ ] Agent ABC + RandomAgent + Minimax baseline (handcrafted eval)
 - [ ] Arena (two agents, one game), Elo tracking, game-log replay
