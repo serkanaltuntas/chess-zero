@@ -11,7 +11,7 @@ step are notes (measurements, decisions) — kept for future-me.
 - [x] Board representation, piece movement, pseudo-legal move generation
 - [x] Legality (check, pin, mate, stalemate), castling, en passant, promotion
 - [x] Draw rules (50-move, 3-fold repetition, insufficient material)
-- [ ] FEN and PGN parse/serialize
+- [x] FEN and PGN parse/serialize
 - [ ] Perft suite against python-chess oracle (perft(4) green)
 > python-chess lives in tests/oracles/ only; never imported by chess_zero/
 - [ ] Interactive terminal CLI: play vs human, play vs random
