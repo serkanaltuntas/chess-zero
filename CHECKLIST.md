@@ -12,8 +12,10 @@ step are notes (measurements, decisions) — kept for future-me.
 - [x] Legality (check, pin, mate, stalemate), castling, en passant, promotion
 - [x] Draw rules (50-move, 3-fold repetition, insufficient material)
 - [x] FEN and PGN parse/serialize
-- [ ] Perft suite against python-chess oracle (perft(4) green)
+- [x] Perft suite against python-chess oracle (perft(4) green)
 > python-chess lives in tests/oracles/ only; never imported by chess_zero/
+> 6 standard positions × depth 1-3 + starting d4 = 19 cases, all match.
+> Aliasing bug in `_king_moves` (queenside castle missed in Kiwipete) caught and fixed.
 - [ ] Interactive terminal CLI: play vs human, play vs random
 
 - [ ] Agent ABC + RandomAgent + Minimax baseline (handcrafted eval)
