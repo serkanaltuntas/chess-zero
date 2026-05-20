@@ -144,20 +144,25 @@ def _king_moves(board: Board, sq: int, color: Color) -> Iterator[Move]:
     # check, must not pass through attacked squares" guards belong in the
     # legality filter — those depend on attack detection which is not in
     # scope here.
+    #
+    # IMPORTANT: we re-read `board.castling_rights` on each check rather
+    # than alias it. As a generator, this function may be suspended between
+    # yields while a caller applies and undoes other king moves; those
+    # operations rebind `board.castling_rights` to a fresh set, and any
+    # stored alias would point to a stale, mutated copy.
     rank0 = 0 if color is Color.WHITE else 7
     if sq != square(4, rank0):
         return
-    rights = board.castling_rights
     ks = "K" if color is Color.WHITE else "k"
     qs = "Q" if color is Color.WHITE else "q"
     if (
-        ks in rights
+        ks in board.castling_rights
         and board.piece_at(square(5, rank0)) is None
         and board.piece_at(square(6, rank0)) is None
     ):
         yield Move(sq, square(6, rank0), flags=MoveFlag.CASTLE_KINGSIDE)
     if (
-        qs in rights
+        qs in board.castling_rights
         and board.piece_at(square(1, rank0)) is None
         and board.piece_at(square(2, rank0)) is None
         and board.piece_at(square(3, rank0)) is None

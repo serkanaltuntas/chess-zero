@@ -157,8 +157,12 @@ class Board:
         # Capturing a rook on its starting square drops the matching right.
         if captured is not None and captured_sq is not None:
             opp_right = _CORNER_RIGHT.get(captured_sq)
-            if opp_right is not None and captured.type is PieceType.ROOK:
-                self.castling_rights.discard(opp_right)
+            if (
+                opp_right is not None
+                and captured.type is PieceType.ROOK
+                and opp_right in self.castling_rights
+            ):
+                self.castling_rights = self.castling_rights - {opp_right}
 
         # Side flip and fullmove increment.
         if self.side_to_move is Color.BLACK:
@@ -180,15 +184,19 @@ class Board:
         self.squares[rook_to] = rook
 
     def _update_castling_rights_after(self, move: Move, piece: Piece) -> None:
+        # Reassign rather than mutate in place: live generators may have
+        # captured the previous set object (see _king_moves) and rely on
+        # `undo_move`'s reassignment to restore the original rights without
+        # touching their stored reference.
         if piece.type is PieceType.KING:
             if piece.color is Color.WHITE:
-                self.castling_rights -= {"K", "Q"}
+                self.castling_rights = self.castling_rights - {"K", "Q"}
             else:
-                self.castling_rights -= {"k", "q"}
+                self.castling_rights = self.castling_rights - {"k", "q"}
         elif piece.type is PieceType.ROOK:
             right = _CORNER_RIGHT.get(move.from_sq)
-            if right is not None:
-                self.castling_rights.discard(right)
+            if right is not None and right in self.castling_rights:
+                self.castling_rights = self.castling_rights - {right}
 
     # ------------------------------------------------------------------- undo
 
