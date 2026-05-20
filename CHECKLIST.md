@@ -20,7 +20,7 @@ step are notes (measurements, decisions) — kept for future-me.
 
 - [x] Agent ABC + RandomAgent + Minimax baseline (handcrafted eval)
 - [x] Arena (two agents, one game), Elo tracking, game-log replay
-- [ ] Gauntlet runner: random vs minimax 100-game match
+- [x] Gauntlet runner: random vs minimax 100-game match
 
 - [ ] Board → tensor encoding (12 piece planes + 7 meta channels)
 - [ ] Value network (small ResNet), training pipeline, checkpoint manager
