@@ -19,7 +19,7 @@ step are notes (measurements, decisions) — kept for future-me.
 - [x] Interactive terminal CLI: play vs human, play vs random
 
 - [x] Agent ABC + RandomAgent + Minimax baseline (handcrafted eval)
-- [ ] Arena (two agents, one game), Elo tracking, game-log replay
+- [x] Arena (two agents, one game), Elo tracking, game-log replay
 - [ ] Gauntlet runner: random vs minimax 100-game match
 
 - [ ] Board → tensor encoding (12 piece planes + 7 meta channels)
