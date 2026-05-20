@@ -17,8 +17,11 @@ from __future__ import annotations
 import argparse
 import random
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
+from chess_zero.agents import MinimaxAgent, RandomAgent
+from chess_zero.agents.base import Agent
+from chess_zero.arena import run_gauntlet
 from chess_zero.board.board import Board
 from chess_zero.board.draws import game_result, is_game_over
 from chess_zero.board.fen import board_from_fen, board_to_fen
@@ -131,6 +134,39 @@ def cmd_perft(args: argparse.Namespace) -> int:
     return 0
 
 
+def _build_agent_factory(spec: str, seed: int) -> Callable[[], Agent]:
+    """Parse 'random' or 'minimax[:depth]' into a zero-arg agent factory."""
+    if spec == "random":
+        return lambda: RandomAgent(seed=seed)
+    if spec == "minimax" or spec.startswith("minimax:"):
+        depth = 2
+        if ":" in spec:
+            depth = int(spec.split(":", 1)[1])
+        return lambda: MinimaxAgent(depth=depth)
+    raise ValueError(f"unknown agent spec: {spec!r}")
+
+
+def cmd_gauntlet(args: argparse.Namespace) -> int:
+    a_factory = _build_agent_factory(args.agent_a, args.seed)
+    b_factory = _build_agent_factory(args.agent_b, args.seed + 1)
+    result = run_gauntlet(
+        a_factory,
+        b_factory,
+        games=args.games,
+        alternate_colors=not args.no_alternate,
+        max_plies=args.max_plies,
+    )
+    print(
+        f"gauntlet: {args.agent_a} vs {args.agent_b} over {result.games_played} games"
+    )
+    print(
+        f"  A: wins={result.a_wins} draws={result.a_draws} losses={result.a_losses}"
+    )
+    print(f"  A score: {result.a_score:.1f}  ({result.a_win_rate * 100:.1f}%)")
+    print(f"  implied Elo delta (A vs B): {result.elo_delta_a:+.1f}")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="chess-zero")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -152,6 +188,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     pf.add_argument("--depth", type=int, required=True)
     pf.add_argument("--fen", type=str, default=None)
     pf.set_defaults(func=cmd_perft)
+
+    gnt = sub.add_parser(
+        "gauntlet",
+        help="batch tournament between two agents (random or minimax[:depth])",
+    )
+    gnt.add_argument("--agent-a", type=str, default="minimax",
+                     help="agent A spec: 'random' or 'minimax[:depth]' (default minimax)")
+    gnt.add_argument("--agent-b", type=str, default="random",
+                     help="agent B spec: 'random' or 'minimax[:depth]' (default random)")
+    gnt.add_argument("--games", type=int, default=10)
+    gnt.add_argument("--seed", type=int, default=0)
+    gnt.add_argument("--max-plies", type=int, default=200)
+    gnt.add_argument("--no-alternate", action="store_true",
+                     help="keep agent A as white for every game (disables color alternation)")
+    gnt.set_defaults(func=cmd_gauntlet)
 
     args = parser.parse_args(list(argv) if argv is not None else None)
     return int(args.func(args))
