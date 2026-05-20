@@ -71,6 +71,12 @@ class Board:
     halfmove_clock: int = 0
     fullmove_number: int = 1
     history: list[UndoInfo] = field(default_factory=list)
+    position_history: list[str] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        # Track the initial position for threefold-repetition counting.
+        if not self.position_history:
+            self.position_history.append(self.position_key())
 
     def piece_at(self, sq: int) -> Piece | None:
         return self.squares.get(sq)
@@ -80,6 +86,18 @@ class Board:
 
     def remove_piece(self, sq: int) -> Piece | None:
         return self.squares.pop(sq, None)
+
+    def position_key(self) -> str:
+        """Canonical key for repetition detection.
+
+        Placement + side-to-move + castling rights + en passant square.
+        Halfmove clock and fullmove number are intentionally excluded, per
+        FIDE: repetition is about position identity, not move counts.
+        """
+        # Lazy import to avoid module cycle (fen depends on board).
+        from chess_zero.board.fen import board_to_fen
+
+        return " ".join(board_to_fen(self).split()[:4])
 
     # ------------------------------------------------------------------ apply
 
@@ -148,6 +166,7 @@ class Board:
         self.side_to_move = self.side_to_move.opposite()
 
         self.history.append(info)
+        self.position_history.append(self.position_key())
 
     def _apply_castle_rook(self, move: Move, color: Color) -> None:
         rank = 0 if color is Color.WHITE else 7
@@ -177,6 +196,7 @@ class Board:
         if not self.history:
             raise IndexError("no moves to undo")
         info = self.history.pop()
+        self.position_history.pop()
         move = info.move
 
         # Flip side back first so we know whose piece moved.
