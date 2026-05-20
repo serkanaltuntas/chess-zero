@@ -18,7 +18,7 @@ step are notes (measurements, decisions) — kept for future-me.
 > Aliasing bug in `_king_moves` (queenside castle missed in Kiwipete) caught and fixed.
 - [x] Interactive terminal CLI: play vs human, play vs random
 
-- [ ] Agent ABC + RandomAgent + Minimax baseline (handcrafted eval)
+- [x] Agent ABC + RandomAgent + Minimax baseline (handcrafted eval)
 - [ ] Arena (two agents, one game), Elo tracking, game-log replay
 - [ ] Gauntlet runner: random vs minimax 100-game match
 
