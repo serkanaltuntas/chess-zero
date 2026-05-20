@@ -101,10 +101,19 @@ def legal_moves(board: Board) -> Iterator[Move]:
 
     Castling carries an extra guard: the king must not be in check now, and
     must not pass through or land on a square attacked by the opponent.
+
+    Captures of the opposing king are also filtered out. Real chess never
+    produces such a position — check has to be resolved before the next
+    move — but our pseudo-legal generation does not encode that, and
+    searchers (minimax, MCTS) would otherwise descend into king-less
+    positions where attack detection raises.
     """
     color = board.side_to_move
     enemy = color.opposite()
     for move in pseudo_legal_moves(board):
+        target = board.piece_at(move.to_sq)
+        if target is not None and target.type is PieceType.KING:
+            continue
         if move.is_castle() and not _castle_path_safe(board, move, color, enemy):
             continue
         board.apply_move(move)
