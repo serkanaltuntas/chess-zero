@@ -9,7 +9,7 @@ step are notes (measurements, decisions) — kept for future-me.
 - [x] Repo scaffold (uv, pyproject, ruff, mypy, pytest, GitHub Actions CI)
 
 - [x] Board representation, piece movement, pseudo-legal move generation
-- [ ] Legality (check, pin, mate, stalemate), castling, en passant, promotion
+- [x] Legality (check, pin, mate, stalemate), castling, en passant, promotion
 - [ ] Draw rules (50-move, 3-fold repetition, insufficient material)
 - [ ] FEN and PGN parse/serialize
 - [ ] Perft suite against python-chess oracle (perft(4) green)
