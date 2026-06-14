@@ -1,6 +1,9 @@
 # Personal superpowers workflow artifacts (specs, plans) — not part of public repo
 docs/superpowers/
 
+# Local-only context (resume notes, memory snapshots, dev-side scratch)
+.local/
+
 # Python
 __pycache__/
 *.py[cod]
